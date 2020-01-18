@@ -2,7 +2,7 @@
 // Created by mw on 30.06.19.
 //
 
-#include "WifiNetworkTask.h"
+#include "../include/WifiNetworkTask.h"
 #include <Log64.h>
 
 

@@ -2,7 +2,7 @@
 // Created by mw on 30.06.19.
 //
 
-#include "BlinkingLed.h"
+#include "../include/BlinkingLed.h"
 #include <Log64.h>
 
 void BlinkingLed::setup() {

@@ -1,0 +1,17 @@
+{
+  "name": "iotcommons-mw",
+  "version": "1.0.0",
+  "description": "IOT common libraries",
+  "keywords": "commons",
+  "authors": {
+    "name": "Michael Wilkowski",
+    "email": "mw@michaelwilkowski.com",
+    "url": "http://www.michaelwilkowski.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "contabo:/home/mw/git-repos/iot/iotcommons"
+  },
+  "frameworks": "arduino",
+  "platforms": "espressif8266"
+}
