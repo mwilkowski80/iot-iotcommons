@@ -3,8 +3,8 @@
 //
 
 #include "../include/WifiNetworkTask.h"
-#include <Log64.h>
 
+logger_t WifiNetworkTask::logger = LOGGER("WifiNetworkTask");
 
 void WifiNetworkTask::setup() {
   WiFi.mode(WIFI_STA);
@@ -29,12 +29,11 @@ WifiNetworkTask::WifiNetworkTask(const std::string &ssid, const std::string pass
       password(password), maxConnectMillis(maxConnectMillis) {}
 
 bool WifiNetworkTask::connectIsTimedout() {
-  return tsLastAttemptOrLastConnected == -1 || tsLastAttemptOrLastConnected + maxConnectMillis < millis();
+  return tsLastAttemptOrLastConnected == 0 || tsLastAttemptOrLastConnected + maxConnectMillis < millis();
 }
 
 void WifiNetworkTask::connect() {
-  LOG64_SET("New attempt to connect to Wifi network");
-  LOG64_NEW_LINE;
+  logger("New attempt to connect to Wifi network");
   WiFi.begin(ssid.c_str(), password.c_str());
   tsLastAttemptOrLastConnected = millis();
 }

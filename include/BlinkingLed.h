@@ -14,16 +14,16 @@ enum class LedStatus {
 
 typedef struct {
   LedStatus exit;
-  long exitMillis;
-  long onInterval;
-  long offInterval;
+  unsigned long exitMillis;
+  unsigned long onInterval;
+  unsigned long offInterval;
 } BlinkingLedConfig;
 
 class BlinkingLed : public Task {
 private:
   const int ledNum;
   LedStatus currentStatus = LedStatus::OFF;
-  long tsLastSwitch = 0;
+  unsigned long tsLastSwitch = 0;
   constexpr static BlinkingLedConfig DEFAULT_CONFIG = {LedStatus::ON, 0, 0, 0};
   BlinkingLedConfig currentConfig = DEFAULT_CONFIG;
 

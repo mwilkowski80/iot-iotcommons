@@ -31,10 +31,10 @@ void BlinkingLed::maybeSwitch() {
 
 bool BlinkingLed::shouldSwitch() {
   if (currentStatus == LedStatus::OFF) {
-    long tsShouldSwitch = currentConfig.offInterval + tsLastSwitch;
+    unsigned long tsShouldSwitch = currentConfig.offInterval + tsLastSwitch;
     return millis() > tsShouldSwitch;
   } else {
-    long tsShouldSwitch = currentConfig.onInterval + tsLastSwitch;
+    unsigned long tsShouldSwitch = currentConfig.onInterval + tsLastSwitch;
     return millis() > tsShouldSwitch;
   }
 }

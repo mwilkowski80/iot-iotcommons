@@ -52,14 +52,17 @@ inline void LOG64_SET_IMPL(String s);
 inline void LOG64_SET_IMPL(float f);
 inline void LOG64_SET_IMPL(double d);
 inline void LOG64_NEW_LINE_IMPL();
+inline void LOG_PRINTLN_IMPL(String s);
 
-#define LOG64_SET(P) LOG64_SET_IMPL(P)
+#define LOG64_SET(P) LOG64_SET_IMPL(P);
 #define LOG64_NEW_LINE LOG64_NEW_LINE_IMPL();
 #define LOG64_SPACE LOG64_SPACE_IMPL()
+#define LOG_PRINTLN(P) LOG_PRINTLN_IMPL(P)
 
 #else
 
 #define LOG64_SET(P)
+#define LOG_PRINTLN(P)
 #define LOG64_NEW_LINE
 #define LOG64_SPACE
 
@@ -109,6 +112,20 @@ inline void LOG64_INIT()
   EEPROM_LOG64_ADDR_PTR = EEPROM_LOG64_Start_Address;
 #endif
 }
+
+inline void LOG_PRINTLN_IMPL(String s) {
+#if defined (LOG64_ENABLED)
+  LOG64_SET(s);
+  LOG64_NEW_LINE;
+#endif
+}
+
+typedef std::function<void(String)> logger_t;
+
+inline logger_t LOGGER(String name) {
+  return [name] (String msg) { LOG_PRINTLN(name + ": " + msg);};
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // LOG64
@@ -326,6 +343,7 @@ inline void LOG64_EEPROM_READ_IMPL()
   LOG64_NEW_LINE;
 }
 #endif
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #endif // _LOG64_DEF_

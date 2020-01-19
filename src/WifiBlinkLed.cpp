@@ -6,6 +6,8 @@
 #include <Arduino.h>
 #include <Log64.h>
 
+logger_t WifiBlinkLed::logger = LOGGER("WifiBlinkLed");
+
 void WifiBlinkLed::onStatus(bool connected) {
   if (this->connected != connected) {
     LOG64_SET(String("Wifi connected: ") + connected);

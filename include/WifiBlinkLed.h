@@ -13,6 +13,8 @@ private:
   BlinkingLed *const led;
   bool connected = false;
 
+  static logger_t logger;
+
 public:
   WifiBlinkLed(BlinkingLed *aLed) : led(aLed) {}
 

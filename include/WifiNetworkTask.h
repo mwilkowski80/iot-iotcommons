@@ -8,6 +8,7 @@
 
 #include "Task.h"
 #include <ESP8266WiFi.h>
+#include <Log64.h>
 
 class WifiNetworkListener {
 public:
@@ -18,9 +19,11 @@ class WifiNetworkTask : public Task {
 private:
   const std::string ssid;
   const std::string password;
-  long tsLastAttemptOrLastConnected = -1;
-  const long maxConnectMillis;
+  unsigned long tsLastAttemptOrLastConnected = 0;
+  const unsigned long maxConnectMillis;
   std::vector<WifiNetworkListener *> listeners;
+
+  static logger_t logger;
 
   void connectToWifiNetworkIfNeeded();
 
