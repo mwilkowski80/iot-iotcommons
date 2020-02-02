@@ -33,8 +33,6 @@ private:
 
   bool shouldSwitch();
 
-  void switchLed();
-
 public:
   BlinkingLed(const int ledNum);
 
@@ -43,6 +41,8 @@ public:
   void run() override;
 
   void setConfig(const BlinkingLedConfig &param);
+
+  void switchLed();
 };
 
 

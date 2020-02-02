@@ -10,6 +10,12 @@
 #include <ESP8266WiFi.h>
 #include <Log64.h>
 
+struct NetConfig {
+  IPAddress ip;
+  IPAddress gateway;
+  IPAddress subnet;
+};
+
 class WifiNetworkListener {
 public:
   virtual void onStatus(bool connected);
@@ -17,6 +23,7 @@ public:
 
 class WifiNetworkTask : public Task {
 private:
+  const std::unique_ptr<NetConfig> config;
   const std::string ssid;
   const std::string password;
   unsigned long tsLastAttemptOrLastConnected = 0;
@@ -33,6 +40,7 @@ private:
 
 public:
   WifiNetworkTask(const std::string &ssid, const std::string password, const long maxConnectMillis);
+  WifiNetworkTask(const std::string &ssid, const std::string password, const long maxConnectMillis, NetConfig netConfig);
 
   void setup() override;
 
@@ -44,6 +52,11 @@ public:
 
   bool isConnected() const {
     return WiFi.isConnected();
+  }
+
+  void configure() {
+    if (config)
+      WiFi.config(config->ip, config->gateway, config->subnet);
   }
 };
 

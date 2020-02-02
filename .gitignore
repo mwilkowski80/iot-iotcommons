@@ -7,3 +7,4 @@ CMakeListsPrivate.txt
 /.idea
 *.iml
 /CMakeLists.txt
+/cmake-build-nodemcuv2
