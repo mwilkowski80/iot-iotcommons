@@ -13,5 +13,10 @@
     "url": "contabo:/home/mw/git-repos/iot/iotcommons"
   },
   "frameworks": "arduino",
-  "platforms": "espressif8266"
+  "platforms": "espressif8266",
+  "dependencies": [
+    {
+      "name": "ESP8266WiFi"
+    }
+  ]
 }
