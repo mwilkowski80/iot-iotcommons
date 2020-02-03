@@ -1,0 +1,8 @@
+image:
+  name: "sglahn/platformio-core:latest"
+  entrypoint: [""]
+
+run-test:
+  script:
+    - cp src/main.cpp.gitlab-ci_yml src/main.cpp
+    - platformio run
