@@ -13,5 +13,5 @@ run-test:
     - cp src/main.cpp.gitlab-ci_yml src/main.cpp
     - pio init --board nodemcuv2
     - pio run
-    - curl --request POST --form "token=$CI_JOB_TOKEN" --form ref=master http://5.189.144.52:6443/api/v4/projects/4/trigger/pipeline
-    - curl --request POST --form "token=$CI_JOB_TOKEN" --form ref=master http://5.189.144.52:6443/api/v4/projects/8/trigger/pipeline
+    - curl --request POST --form "token=$CI_JOB_TOKEN" --form ref=master https://vmi273874.contaboserver.net:6443/api/v4/projects/4/trigger/pipeline
+    - curl --request POST --form "token=$CI_JOB_TOKEN" --form ref=master https://vmi273874.contaboserver.net:6443/api/v4/projects/8/trigger/pipeline
