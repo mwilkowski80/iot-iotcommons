@@ -5,6 +5,8 @@
 #include "../include/BlinkingLed.h"
 #include <Log64.h>
 
+logger_t BlinkingLed::logger = LOGGER("BlinkingLed");
+
 void BlinkingLed::setup() {
   pinMode(ledNum, OUTPUT);
 }

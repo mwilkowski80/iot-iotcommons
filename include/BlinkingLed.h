@@ -33,6 +33,8 @@ private:
 
   bool shouldSwitch();
 
+  static logger_t logger;
+
 public:
   BlinkingLed(const int ledNum);
 
