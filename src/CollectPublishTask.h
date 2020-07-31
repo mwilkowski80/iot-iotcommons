@@ -8,23 +8,38 @@
 #include <Arduino.h>
 #include <Task.h>
 
+template<class value_type>
 class CollectPublishTask : public Task {
-private:
-  const std::function<String()> collect;
-  const std::function<bool(String)> publish;
+public:
+  struct CollectResult {
+    enum ErrorCode {
+      SUCCESS,
+      OTHER_ERROR
+    };
 
+    ErrorCode error_code;
+    value_type value;
+  };
+
+private:
+  const std::function<CollectResult()> collect;
+  const std::function<bool(value_type)> publish;
+
+  const unsigned long ts_attempt_threshold;
   const unsigned long ts_collect_threshold;
   const unsigned long ts_publish_threshold;
-  String sensor_data;
+  value_type sensor_data;
+  unsigned long ts_last_attempt = 0;
   unsigned long ts_last_collect = 0;
   unsigned long ts_last_publish = 0;
   bool dirty = false;
 
 public:
-  CollectPublishTask(const std::function<String()> collect, const std::function<bool(String)> publish,
-                     const unsigned long ts_collect_threshold, const unsigned long ts_publish_threshold) : collect(
+  CollectPublishTask(const std::function<CollectResult()> collect, const std::function<bool(value_type)> publish,
+                     const unsigned long ts_collect_threshold, const unsigned long ts_publish_threshold,
+                     const unsigned long ts_attempt_threshold) : collect(
       collect), publish(publish), ts_collect_threshold(ts_collect_threshold), ts_publish_threshold(
-      ts_publish_threshold) {}
+      ts_publish_threshold), ts_attempt_threshold(ts_attempt_threshold) {}
 
   void setup() override {
   }
@@ -44,13 +59,20 @@ public:
   }
 
   void maybe_collect() {
-    if (ts_last_collect == 0 || ts_last_collect + ts_collect_threshold < millis()) {
-      String new_sensor_data = collect();
-      ts_last_collect = millis();
+    bool should_collect = ts_last_collect == 0 || ts_last_collect + ts_collect_threshold < millis();
+    bool should_attempt_to_collect = ts_last_attempt == 0 || ts_last_attempt + ts_attempt_threshold < millis();
+    if (should_collect && should_attempt_to_collect) {
+      ts_last_attempt = millis();
+      auto new_result = collect();
+      if (new_result.error_code == CollectResult::SUCCESS) {
+        ts_last_collect = millis();
+        auto new_sensor_data = new_result.value;
 
-      if (new_sensor_data != sensor_data)
-        dirty = true;
-      sensor_data = new_sensor_data;
+        if (new_sensor_data != sensor_data)
+          dirty = true;
+        sensor_data = new_sensor_data;
+
+      }
     }
   }
 };
