@@ -5,12 +5,11 @@
   "keywords": "commons",
   "authors": {
     "name": "Michael Wilkowski",
-    "email": "mw@michaelwilkowski.com",
-    "url": "http://www.michaelwilkowski.com"
+    "url": "https://github.com/mwilkowski80"
   },
   "repository": {
     "type": "git",
-    "url": "contabo:/home/mw/git-repos/iot/iotcommons"
+    "url": "git@github.com:mwilkowski80/iot-iotcommons.git"
   },
   "frameworks": "arduino",
   "platforms": "espressif8266",
