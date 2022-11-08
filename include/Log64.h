@@ -34,6 +34,19 @@
 #ifndef _LOG64_DEF_
 #define _LOG64_DEF_
 
+#ifdef _PIO_ENV_NATIVE_
+
+#include <functional>
+#include <string>
+
+typedef std::function<void(std::string)> logger_t;
+
+inline logger_t LOGGER(std::string name) {
+  return [name] (std::string msg) { std::cerr << msg << std::endl; };
+}
+
+#else // _PIO_ENV_NATIVE_
+
 #include <Arduino.h>
 
 #if defined (LOG64_ENABLED)
@@ -345,5 +358,7 @@ inline void LOG64_EEPROM_READ_IMPL()
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#endif // _PIO_ENV_NATIVE_
 
 #endif // _LOG64_DEF_

@@ -6,6 +6,7 @@
 #define TEMP_WIFI_CLIENT_WIFINETWORKTASK_H
 
 
+#include <string>
 #include "Task.h"
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
