@@ -8,44 +8,42 @@
 logger_t BlinkingLed::logger = LOGGER("BlinkingLed");
 
 void BlinkingLed::setup() {
-  pinMode(ledNum, OUTPUT);
+    pinMode(ledNum, OUTPUT);
 }
 
 void BlinkingLed::run() {
-  if (millis() >= currentConfig.exitMillis) {
-    setLedStatus(currentConfig.exit);
-  } else {
-    maybeSwitch();
-  }
+    if (millis() >= currentConfig.exitMillis) {
+        setLedStatus(currentConfig.exit);
+    } else {
+        maybeSwitch();
+    }
 }
 
-BlinkingLed::BlinkingLed(const int ledNum) : ledNum(ledNum) {}
-
 void BlinkingLed::setLedStatus(LedStatus status) {
-  currentStatus = status;
-  digitalWrite(ledNum, status == LedStatus::OFF ? HIGH : LOW);
+    currentStatus = status;
+    digitalWrite(ledNum, status == LedStatus::OFF ? ledOffPinSignal : ledOnPinSignal);
 }
 
 void BlinkingLed::maybeSwitch() {
-  if (shouldSwitch())
-    switchLed();
+    if (shouldSwitch())
+        switchLed();
 }
 
 bool BlinkingLed::shouldSwitch() {
-  if (currentStatus == LedStatus::OFF) {
-    unsigned long tsShouldSwitch = currentConfig.offInterval + tsLastSwitch;
-    return millis() > tsShouldSwitch;
-  } else {
-    unsigned long tsShouldSwitch = currentConfig.onInterval + tsLastSwitch;
-    return millis() > tsShouldSwitch;
-  }
+    if (currentStatus == LedStatus::OFF) {
+        unsigned long tsShouldSwitch = currentConfig.offInterval + tsLastSwitch;
+        return millis() > tsShouldSwitch;
+    } else {
+        unsigned long tsShouldSwitch = currentConfig.onInterval + tsLastSwitch;
+        return millis() > tsShouldSwitch;
+    }
 }
 
 void BlinkingLed::switchLed() {
-  setLedStatus(currentStatus == LedStatus::ON ? LedStatus::OFF : LedStatus::ON);
-  tsLastSwitch = millis();
+    setLedStatus(currentStatus == LedStatus::ON ? LedStatus::OFF : LedStatus::ON);
+    tsLastSwitch = millis();
 }
 
 void BlinkingLed::setConfig(const BlinkingLedConfig &param) {
-  currentConfig = param;
+    currentConfig = param;
 }
