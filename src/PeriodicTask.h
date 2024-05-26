@@ -23,6 +23,10 @@ public:
   void setup() override;
 
   void run() override;
+
+  void reset_timer() {
+    ts_last_run = 0L;
+  }
 };
 
 
