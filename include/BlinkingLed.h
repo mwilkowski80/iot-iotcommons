@@ -12,12 +12,15 @@ enum class LedStatus {
     ON, OFF
 };
 
+
 typedef struct {
     LedStatus exit;
     unsigned long exitMillis;
     unsigned long onInterval;
     unsigned long offInterval;
 } BlinkingLedConfig;
+
+
 
 class BlinkingLed : public Task {
 private:
@@ -51,6 +54,9 @@ public:
     void setConfig(const BlinkingLedConfig &param);
 
     void switchLed();
+
+    constexpr static BlinkingLedConfig ON = {LedStatus::ON, 0, 0, 0};
+    constexpr static BlinkingLedConfig OFF = {LedStatus::OFF, 0, 0, 0};
 };
 
 

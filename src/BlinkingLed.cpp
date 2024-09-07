@@ -7,6 +7,7 @@
 
 logger_t BlinkingLed::logger = LOGGER("BlinkingLed");
 
+
 void BlinkingLed::setup() {
     pinMode(ledNum, OUTPUT);
 }
