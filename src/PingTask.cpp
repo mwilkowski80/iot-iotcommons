@@ -19,21 +19,8 @@ void PingTask::run() {
 }
 
 bool PingTask::ping() {
-    HTTPClient http;
-    WiFiClient wifi_client;
-
-    http.begin(wifi_client, ping_url);
-    if (token != "") {
-        http.addHeader("Authorization", "Bearer " + token);
-    }
-    http.addHeader("Content-Type", "application/json");
-    http.addHeader("Accept", "application/json");
     auto payload = generate_payload();
-
-    logger("Sending ping to " + ping_url + ", payload: " + payload);
-    auto result = http.POST(payload);
-    logger("Ping error code: " + String(result));
-    return result >= 200 && result < 300;
+    return HomeAssistant::isSuccess(homeAssistant.setState(pingSensorEntityId, payload));
 }
 
 String PingTask::generate_payload() {

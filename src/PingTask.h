@@ -9,6 +9,7 @@
 #include <Task.h>
 #include <WifiNetworkTask.h>
 #include <BlinkingLed.h>
+#include "../include/HomeAssistant.h"
 
 class PingTask : public Task {
 public:
@@ -19,23 +20,21 @@ private:
 
 public:
 
-    PingTask(const ulong pingInterval, WifiNetworkTask *wifiNetworkTask, const String pingUrl, const String token,
-             std::function<void()> on_error, std::function<void()> on_success)
-            : ping_interval(pingInterval), wifi_network_task(wifiNetworkTask), ping_url(pingUrl), token(token),
-                on_error(on_error), on_success(on_success) {}
+    PingTask(const ulong pingInterval, WifiNetworkTask *wifiNetworkTask, const String pingSensorEntityId,
+             HomeAssistant homeAssistant, std::function<void()> on_error, std::function<void()> on_success)
+            : ping_interval(pingInterval), wifi_network_task(wifiNetworkTask), pingSensorEntityId(pingSensorEntityId),
+              on_error(on_error), on_success(on_success), homeAssistant(homeAssistant) {}
 
 private:
     ulong ts_last_ping = 0;
     const ulong ping_interval;
     WifiNetworkTask *wifi_network_task;
-    const String ping_url;
-    const String token;
+    HomeAssistant homeAssistant;
+    String pingSensorEntityId;
 
     String generate_payload();
 
     bool ping();
-
-    void handle_error();
 
     static logger_t logger;
 

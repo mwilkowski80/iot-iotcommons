@@ -7,40 +7,45 @@
 logger_t WifiNetworkTask::logger = LOGGER("WifiNetworkTask");
 
 void WifiNetworkTask::setup() {
-  WiFi.mode(WIFI_STA);
-  connectToWifiNetworkIfNeeded();
+    WiFi.mode(WIFI_STA);
+    connectToWifiNetworkIfNeeded();
 }
 
 void WifiNetworkTask::run() {
-  connectToWifiNetworkIfNeeded();
+    connectToWifiNetworkIfNeeded();
 
-  bool connectedStatus = isConnected();
-  for (auto &listener: listeners)
-    listener->onStatus(connectedStatus);
+    bool connectedStatus = isConnected();
+    if (connectedStatus != last_connected_status) {
+        last_connected_status = connectedStatus;
+        for (auto &listener: statusChangedListeners)
+            listener(connectedStatus);
+    }
+    for (auto &listener: statusListeners)
+        listener(connectedStatus);
 }
 
 void WifiNetworkTask::connectToWifiNetworkIfNeeded() {
-  if (!isConnected() && connectIsTimedout())
-    connect();
+    if (!isConnected() && connectIsTimedout())
+        connect();
 }
 
 WifiNetworkTask::WifiNetworkTask(const std::string &ssid, const std::string password, const long maxConnectMillis)
-    : ssid(ssid),
-      password(password), maxConnectMillis(maxConnectMillis) {}
+        : ssid(ssid),
+          password(password), maxConnectMillis(maxConnectMillis) {}
 
 WifiNetworkTask::WifiNetworkTask(const std::string &ssid, const std::string password, const long maxConnectMillis,
                                  NetConfig config)
-    : ssid(ssid),
-      password(password), maxConnectMillis(maxConnectMillis),
-      config(new NetConfig(config)) {}
+        : ssid(ssid),
+          password(password), maxConnectMillis(maxConnectMillis),
+          config(new NetConfig(config)) {}
 
 bool WifiNetworkTask::connectIsTimedout() {
-  return tsLastAttemptOrLastConnected == 0 || tsLastAttemptOrLastConnected + maxConnectMillis < millis();
+    return tsLastAttemptOrLastConnected == 0 || tsLastAttemptOrLastConnected + maxConnectMillis < millis();
 }
 
 void WifiNetworkTask::connect() {
-  logger("New attempt to connect to Wifi network");
-  configure();
-  WiFi.begin(ssid.c_str(), password.c_str());
-  tsLastAttemptOrLastConnected = millis();
+    logger("New attempt to connect to Wifi network");
+    configure();
+    WiFi.begin(ssid.c_str(), password.c_str());
+    tsLastAttemptOrLastConnected = millis();
 }

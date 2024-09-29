@@ -8,19 +8,26 @@
 
 #include "BlinkingLed.h"
 
-class WifiBlinkLed : public WifiNetworkListener {
+class WifiBlinkLed {
 private:
-  BlinkingLed *const led;
-  bool connected = false;
+    BlinkingLed *const led;
+    bool connected = false;
 
-  static logger_t logger;
+    static logger_t logger;
+    std::function<void(bool)> onStatusListener = [this](bool _connected) {
+        this->onStatus(_connected);
+    };
 
 public:
-  WifiBlinkLed(BlinkingLed *aLed) : led(aLed) {}
+    WifiBlinkLed(BlinkingLed *aLed) : led(aLed) {}
 
-  virtual void onStatus(bool connected);
+    virtual void onStatus(bool connected);
 
-  void applyBlinkingStatus();
+    void applyBlinkingStatus();
+
+    void attachToNetworkTask(WifiNetworkTask *networkTask) {
+        networkTask->addStatusListener(onStatusListener);
+    }
 };
 
 

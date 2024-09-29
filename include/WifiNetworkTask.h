@@ -13,53 +13,56 @@
 #include <Log64.h>
 
 struct NetConfig {
-  IPAddress ip;
-  IPAddress gateway;
-  IPAddress subnet;
-};
-
-class WifiNetworkListener {
-public:
-  virtual void onStatus(bool connected);
+    IPAddress ip;
+    IPAddress gateway;
+    IPAddress subnet;
 };
 
 class WifiNetworkTask : public Task {
 private:
-  const std::unique_ptr<NetConfig> config;
-  const std::string ssid;
-  const std::string password;
-  unsigned long tsLastAttemptOrLastConnected = 0;
-  const unsigned long maxConnectMillis;
-  std::vector<WifiNetworkListener *> listeners;
+    const std::unique_ptr<NetConfig> config;
+    const std::string ssid;
+    const std::string password;
+    unsigned long tsLastAttemptOrLastConnected = 0;
+    const unsigned long maxConnectMillis;
+    std::vector<std::function<void(bool)>> statusListeners;
+    std::vector<std::function<void(bool)>> statusChangedListeners;
+    bool last_connected_status = false;
 
-  static logger_t logger;
+    static logger_t logger;
 
-  void connectToWifiNetworkIfNeeded();
+    void connectToWifiNetworkIfNeeded();
 
-  bool connectIsTimedout();
+    bool connectIsTimedout();
 
-  void connect();
+    void connect();
 
 public:
-  WifiNetworkTask(const std::string &ssid, const std::string password, const long maxConnectMillis);
-  WifiNetworkTask(const std::string &ssid, const std::string password, const long maxConnectMillis, NetConfig netConfig);
+    WifiNetworkTask(const std::string &ssid, const std::string password, const long maxConnectMillis);
 
-  void setup() override;
+    WifiNetworkTask(const std::string &ssid, const std::string password, const long maxConnectMillis,
+                    NetConfig netConfig);
 
-  void run() override;
+    void setup() override;
 
-  void addListener(WifiNetworkListener *listener) {
-    listeners.push_back(listener);
-  }
+    void run() override;
 
-  bool isConnected() const {
-    return WiFi.isConnected();
-  }
+    void addStatusListener(std::function<void(bool)> &listener) {
+        statusListeners.push_back(listener);
+    }
 
-  void configure() {
-    if (config)
-      WiFi.config(config->ip, config->gateway, config->subnet);
-  }
+    void addStatusChangedListener(std::function<void(bool)> &listener) {
+        statusChangedListeners.push_back(listener);
+    }
+
+    bool isConnected() const {
+        return WiFi.isConnected();
+    }
+
+    void configure() {
+        if (config)
+            WiFi.config(config->ip, config->gateway, config->subnet);
+    }
 };
 
 
